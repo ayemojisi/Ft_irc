@@ -1,12 +1,12 @@
 #pragma once
 
-#include "client.hpp"
 #include "libs.hpp"
 
 class Channel {
 private:
   string name;
-  list<Client> clients;
+  string type;
+  string topic;
 
 public:
   Channel(){};

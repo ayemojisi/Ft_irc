@@ -27,3 +27,5 @@ using std::map;
 using std::pair;
 using std::runtime_error;
 using std::string;
+
+#include "commands.hpp"

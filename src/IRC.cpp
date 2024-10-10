@@ -3,6 +3,7 @@
 #include <arpa/inet.h>
 #include <cstdio>
 #include <sstream>
+#include <string>
 #include <sys/select.h>
 
 IRC::IRC(int port, string password) {
@@ -83,42 +84,18 @@ static void handleClientQuit(int sockfd, fd_set &masterfd,
 }
 
 void IRC::handleClient(int sockfd) {
-  int nbytes;
   Client &client = this->clients.find(sockfd)->second;
-  if ((nbytes = recv(sockfd, this->buffer, sizeof(this->buffer), 0)) <= 0) {
+  char buff[BUFFER_SIZE] = {0};
+  int nbytes;
+  if ((nbytes = recv(client.getSockfd(), buff, sizeof(buff) - 1, 0)) < 0) {
     if (nbytes != 0)
       throw runtime_error("Recv error");
     handleClientQuit(sockfd, this->masterfd, this->clients);
   } else {
-    if (client.getNickname() == "") {
-      std::istringstream iss(this->buffer);
-      string token, result;
-      while (iss >> token) {
-        if (token == "NICK") {
-          iss >> token;
-          iss >> result;
-          this->clients.find(sockfd)->second.setNickname(result);
-        } else if (token == "USER") {
-          iss >> token;
-          iss >> result;
-          this->clients.find(sockfd)->second.setUsername(result);
-        } else if (token == "QUIT") {
-          handleClientQuit(sockfd, this->masterfd, this->clients);
-        }
-      }
-      cout << FG_YELLOW << "Client " << sockfd << " set nick to "
-           << client.getNickname() << RESET << endl;
-    } else {
-      cout << FG_YELLOW << "Client " << sockfd << " sent: " << this->buffer
-           << RESET << endl;
-    }
-    for (int i = 0; i <= this->maxfd; i++) {
-      if (FD_ISSET(i, &this->masterfd)) {
-        if (i != this->sockfd && i != sockfd) {
-          if (send(i, this->buffer, nbytes, 0) == -1)
-            throw runtime_error("Send error");
-        }
-      }
-    }
+    std::istringstream iss(buff);
+    string token, result;
+    buff[nbytes] = '\0';
+    cout << FG_RED << "Receivrecved: " << buff << endl << endl << endl << RESET;
+    sendAllClientMsg(this->clients, buff);
   }
 }

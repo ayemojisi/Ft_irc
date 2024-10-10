@@ -5,7 +5,7 @@
 
 #define BACKLOG 10       // how many pending connections queue will hold
 #define MAXCLIENTS 10    // maximum number of clients
-#define BUFFER_SIZE 2024 // buffer size
+#define BUFFER_SIZE 1024 // buffer size
 
 class IRC {
 private:
@@ -15,8 +15,6 @@ private:
   int newClientfd;
   int itsMine;
   int maxClients;
-  int nbytes;
-  char buffer[BUFFER_SIZE];
   fd_set masterfd;
   fd_set readfd;
   string password;
