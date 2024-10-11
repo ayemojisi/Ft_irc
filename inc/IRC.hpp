@@ -5,7 +5,7 @@
 
 #define BACKLOG 10       // how many pending connections queue will hold
 #define MAXCLIENTS 10    // maximum number of clients
-#define BUFFER_SIZE 1024 // buffer size
+#define BUFFER_SIZE 4096 // buffer size
 
 class IRC {
 private:
@@ -37,3 +37,7 @@ public:
   IRC(const IRC &irc);
   ~IRC() { close(sockfd); }
 };
+
+string fullMsg(std::istringstream iss);
+void sendMsg(int targetFd, string msg);
+void sendAllClientMsg(map<int, Client> &clientList, string msg);

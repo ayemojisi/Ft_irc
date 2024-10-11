@@ -3,6 +3,7 @@
 #include "style.hpp"
 
 #include <arpa/inet.h>
+#include <netinet/in.h>
 #include <fcntl.h>
 #include <iostream>
 #include <list>
@@ -27,5 +28,3 @@ using std::map;
 using std::pair;
 using std::runtime_error;
 using std::string;
-
-#include "commands.hpp"

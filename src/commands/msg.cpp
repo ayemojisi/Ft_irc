@@ -1,4 +1,4 @@
-#include "../../inc/commands.hpp"
+#include "../../inc/IRC.hpp"
 
 string fullMsg(std::istringstream iss) {
   string result = "";
