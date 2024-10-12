@@ -1,6 +1,7 @@
 #pragma once
 
 #include "style.hpp"
+#include "defines.hpp"
 
 #include <arpa/inet.h>
 #include <netinet/in.h>

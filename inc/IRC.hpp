@@ -31,6 +31,7 @@ public:
   void newClientAdd();
   void handleClient(int sockfd);
   void HandleClientQuit();
+  void CommandHandler(Client &client, string cmd);
 
   // constructors
   IRC(int port, string password);

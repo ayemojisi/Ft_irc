@@ -14,9 +14,9 @@ private:
   string password;
   bool isAuthed;
 
-  Client();
 
 public:
+  Client();
   Client(int sockfd, sockaddr_in sockAddr);
   Client(const Client &client);
   Client &operator=(const Client &client);

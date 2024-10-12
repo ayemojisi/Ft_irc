@@ -13,7 +13,7 @@ string fullMsg(std::istringstream iss) {
 }
 
 void sendMsg(int targetFd, string msg) {
-  if (send(targetFd, msg.c_str(), msg.length(), 0) == -1)
+  if (send(targetFd, (msg + "\r\n").c_str(), msg.length() + 2, 0) == -1)
     std::runtime_error("Send error");
 }
 
