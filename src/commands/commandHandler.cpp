@@ -44,29 +44,65 @@ void IRC::CommandHandler(Client &client, string cmd)
             {
                 sendMsg(client.getSockfd(), RPL_WELCOME(client.getUsername()));
                 client.setIsAuthed(true);
+                break;
             }
             if (client.getIsAuthed())
             {
-                /* Bunlar eklenecek
-    if(client.getIsAuth() && token == "PRIVMSG")
-                      else if(client.getIsAuth() && token == "JOIN")
-                      else if(client.getIsAuth() && token == "TOPIC")
-                      else if(client.getIsAuth() && token == "KICK")
-                      else if(client.getIsAuth() && token == "LIST")
-                      else if(client.getIsAuth() && token == "INVITE")
-                      else if(client.getIsAuth() && token == "MODE")
-                      else if(client.getIsAuth() && token == "PART")
-                      else if(client.getIsAuth() && token == "QUIT")
-                      else if(client.getIsAuth() && token == 	"NOTICE")
-                      else if(client.getIsAuth()){
-    */
-                if ((token != "PRIVMSG" && token != "JOIN" && token != "TOPIC" &&
-                     token != "KICK" && token != "INVITE" && token != "LIST" &&
-                     token != "MODE" && token != "PART" && token != "QUIT"))
-                    sendMsg(client.getSockfd(), ": Command is not found.");
+                if (token == "PRIVMSG")
+                {
+                    break;
+                }
+                else if (token == "JOIN")
+                {
+                    break;
+                }
+                else if (token == "TOPIC")
+                {
+                    break;
+                }
+                else if (token == "KICK")
+                {
+                    break;
+                }
+                else if (token == "LIST")
+                {
+                    break;
+                }
+                else if (token == "INVITE")
+                {
+                    break;
+                }
+                else if (token == "MODE")
+                {
+                    break;
+                }
+                else if (token == "PART")
+                {
+                    break;
+                }
+                else if (token == "QUIT")
+                {
+                    break;
+                }
+                else if (token == "NOTICE")
+                {
+                    break;
+                }
+                else if (token == "PING")
+                {
+                    sendMsg(client.getSockfd(), cmd);
+                    break;
+                }
+                else if (token == "PONG")
+                {
+                    sendMsg(client.getSockfd(), token);
+                    break;
+                }
                 else
-                    sendMsg(client.getSockfd(), FG_LIGHTRED + client.getNickname() +
-                                                    " Please login!" + RESET);
+                {
+                    sendMsg(client.getSockfd(), token + " Command is not found.");
+                    break;
+                }
             }
         }
     }

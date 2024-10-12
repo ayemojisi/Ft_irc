@@ -9,10 +9,12 @@ private:
   string topic;
   string password;
   map<int, Client> clients;
-  Client admin;
+  std::list<int> ops;
 
 public:
   Channel(){};
   Channel(string name) { this->name = name; }
   ~Channel(){};
+
+
 };
