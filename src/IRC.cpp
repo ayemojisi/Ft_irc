@@ -98,7 +98,7 @@ void IRC::newClientAdd()
 static void handleClientQuit(int sockfd, fd_set &masterfd, map<int, Client> &clients)
 {
   Client &client = clients.find(sockfd)->second;
-  cout << FG_RED << "{}[" << sockfd << "] "
+  cout << FG_RED << "{LOG}[" << sockfd << "] "
        << (client.getNickname().empty() ? "client" : client.getNickname())
        << " is Disconnected" << endl
        << RESET;
@@ -122,7 +122,7 @@ void IRC::handleClient(int sockfd)
   {
     buff[nbytes] = '\0';
     CommandHandler(client, buff);
-    cout << FG_CYAN << "{}[" << sockfd << "] "
+    cout << FG_CYAN << "{LOG}[" << sockfd << "] "
          << (client.getNickname().empty() ? "Client" : client.getNickname())
          << " : " << FG_WHITE << buff << endl
          << RESET;
