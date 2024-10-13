@@ -28,6 +28,7 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
         create.setModfd(client.getSockfd());
         create.addClient(client);
         this->channels.push_back(create);
+        //sendMsg(client.getSockfd(), client.getNickname() + " " + channelName + " 331 : No topic is set");
         sendMsg(client.getSockfd(), client.getIDENTITY() + "JOIN " + channelName);
     }
 }
