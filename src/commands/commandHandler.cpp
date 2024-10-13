@@ -19,7 +19,7 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
         if (it->getPass() == channelPwd)
             it->addClient(client);
         else
-            sendMsg(client.getSockfd(), "475 : Failed to join the #" + channelName + " bad password.");
+            sendMsg(client.getSockfd(), "475 : Failed to join the " + channelName + " bad password.");
     }
     else
     {
@@ -28,7 +28,7 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
         create.setModfd(client.getSockfd());
         create.addClient(client);
         this->channels.push_back(create);
-        sendMsg(client.getSockfd(), "332 :");
+        sendMsg(client.getSockfd(), client.getIDENTITY() + "JOIN " + channelName);
     }
 }
 

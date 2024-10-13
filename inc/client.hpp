@@ -22,6 +22,10 @@ public:
   Client &operator=(const Client &client);
   ~Client();
 
+  string getIDENTITY()
+  {
+	return (":" + this->nickname + "!" + this->username + "@FSociety" + " ");
+  }
   // get-set
   void setUsername(string username) { this->username = username; }
   void setNickname(string nickname) { this->nickname = nickname; }
