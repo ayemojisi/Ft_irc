@@ -1,5 +1,5 @@
 #pragma once
-#define  RPL_WELCOME(username) ("001 :"+username+" welcome to my irc server.")
+#define  RPL_WELCOME(username) ("001 :"+username)
 #define  ERR_PASSWMISMATCH ":server 464* : Incorrect Password"
 #define  ERR_UNKNOWNCOMMAND ":server 421 * : Please enter the PASS command"
 #define RPL_YOURHOST "002 : <client> :Your host is <servername>, running version <version>"
@@ -60,6 +60,7 @@
 #define RPL_WHOREPLY    "352 : <client> <channel> <username> <host> <server> <nick> <flags> :<hopcount> <realname>"
 #define RPL_NAMREPLY   "353 : <client> <symbol> <channel> :[prefix]<nick>{ [prefix]<nick>}"
 #define RPL_LINKS     "364 : <client> * <server> :<hopcount> <server info>"
+
 #define RPL_ENDOFLINKS "<client> * :End of /LINKS list"
 #define RPL_ENDOFNAMES "<client> <channel> :End of /NAMES list"
 #define RPL_BANLIST "<client> <channel> <mask> [<who> <set-ts>]"

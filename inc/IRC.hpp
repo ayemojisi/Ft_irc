@@ -30,15 +30,10 @@ public:
   void start();
   void newClientAdd();
   void handleClient(int sockfd);
-  void HandleClientQuit();
   void CommandHandler(Client &client, string cmd);
-
+  void JoinChannel(Client &client, string channelName, string channelPwd);
   // constructors
   IRC(int port, string password);
   IRC(const IRC &irc);
   ~IRC() { close(sockfd); }
 };
-
-string fullMsg(std::istringstream iss);
-void sendMsg(int targetFd, string msg);
-void sendAllClientMsg(map<int, Client> &clientList, string msg);

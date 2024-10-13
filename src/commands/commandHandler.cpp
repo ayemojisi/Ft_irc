@@ -1,5 +1,37 @@
 #include "../../inc/IRC.hpp"
 
+void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
+{
+    bool join = false;
+    std::list<Channel>::iterator it = this->channels.begin();
+    while (it != this->channels.end())
+    {
+        if (it->getName() == channelName)
+        {
+            join = true;
+            break;
+        }
+        it++;
+    }
+    if (join)
+    {
+        cout << client.getNickname() << " joining channel" << endl;
+        if (it->getPass() == channelPwd)
+            it->addClient(client);
+        else
+            sendMsg(client.getSockfd(), "475 : Failed to join the #" + channelName + " bad password.");
+    }
+    else
+    {
+        cout << client.getNickname() << " creating channel" << endl;
+        Channel create(channelName,channelPwd);
+        create.setModfd(client.getSockfd());
+        create.addClient(client);
+        this->channels.push_back(create);
+        sendMsg(client.getSockfd(), "332 :");
+    }
+}
+
 void IRC::CommandHandler(Client &client, string cmd)
 {
     std::istringstream iss(cmd);
@@ -54,6 +86,12 @@ void IRC::CommandHandler(Client &client, string cmd)
                 }
                 else if (token == "JOIN")
                 {
+                    string channel, pwd;
+                    iss >> channel >> pwd;
+                    if (channel[0] == '#')
+                        JoinChannel(client,channel, pwd);
+                    else
+                        sendMsg(client.getSockfd(), "Error: Channel name should be start with #");
                     break;
                 }
                 else if (token == "TOPIC")
@@ -72,15 +110,15 @@ void IRC::CommandHandler(Client &client, string cmd)
                 {
                     break;
                 }
-                else if (token == "MODE")
+                else if (token == "MODE")//mod verir
                 {
                     break;
                 }
-                else if (token == "PART")
+                else if (token == "PART")//kanaldan ayrılıyor
                 {
                     break;
                 }
-                else if (token == "QUIT")
+                else if (token == "QUIT")//serverden ayrılıyor
                 {
                     break;
                 }
