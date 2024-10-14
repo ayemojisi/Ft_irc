@@ -3,7 +3,7 @@
 Client::Client(int sockfd, sockaddr_in clientAddr) {
   this->sockfd = sockfd;
   this->clientAddr = clientAddr;
-  this->hostInfo = inet_ntoa(this->clientAddr.sin_addr);
+  this->hostInfo = string(inet_ntoa(this->clientAddr.sin_addr));
   cout << "Client connected" << endl;
   cout << "IP: " << inet_ntoa(clientAddr.sin_addr) << endl;
   cout << "Port: " << ntohs(clientAddr.sin_port) << endl;

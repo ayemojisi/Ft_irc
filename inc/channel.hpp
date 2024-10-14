@@ -28,7 +28,9 @@ public:
   string getName() { return this->name; }
   string getPass() { return this->pass; }
   string getTopic() { return this->topic; }
-  list<Client> getClients() { return this->clients; }
+  list<Client> &getClients() { return this->clients; }
+  list<int> getModFd() { return this->modfd; }
+
   //---------------------
   void setName(string name) { this->name = name; }
   void setPass(string pass) { this->pass = pass; }

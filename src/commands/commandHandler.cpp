@@ -1,23 +1,27 @@
 #include "../../inc/IRC.hpp"
+#include <string>
 
 void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
 {
     bool join = false;
-    std::list<Channel>::iterator it = this->channels.begin();
-    while (it != this->channels.end())
+    list<Channel>::iterator channel = this->channels.begin();
+    while (channel != this->channels.end())
     {
-        if (it->getName() == channelName)
+        if (channel->getName() == channelName)
         {
             join = true;
             break;
         }
-        it++;
+        channel++;
     }
     if (join)
     {
         cout << client.getNickname() << " joining channel" << endl;
-        if (it->getPass() == channelPwd)
-            it->addClient(client);
+        if (channel->getPass() == channelPwd)
+        {
+            channel->addClient(client);
+            sendMsg(client.getSockfd(), client.getIDENTITY() + " JOIN " + channelName);
+        }
         else
             sendMsg(client.getSockfd(), "475 : Failed to join the " + channelName + " bad password.");
     }
@@ -25,11 +29,42 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
     {
         cout << client.getNickname() << " creating channel" << endl;
         Channel create(channelName,channelPwd);
+        create.setName(channelName);
         create.setModfd(client.getSockfd());
         create.addClient(client);
         this->channels.push_back(create);
         //sendMsg(client.getSockfd(), client.getNickname() + " " + channelName + " 331 : No topic is set");
-        sendMsg(client.getSockfd(), client.getIDENTITY() + "JOIN " + channelName);
+        sendMsg(client.getSockfd(), client.getIDENTITY() + " JOIN " + channelName);
+    }
+}
+
+void IRC::privmsg(string target, string _msg)
+{
+    cout << "target = " << target << " _msg = " << _msg << endl;
+    string msg = _msg.substr(1);
+    if (target[0] == '#')
+    {
+        cout << "-----------Detected it a channel !" << endl;
+        string channelName = target;
+        list<Channel>::iterator itChannel = this->channels.begin();
+        list<Client>::iterator itClients;
+        while (itChannel != this->channels.end())
+        {
+            cout << "-----------Searching for channel, is it the channel ( " << channelName << " == "<< itChannel->getName() << " )" << endl;
+            if (channelName == itChannel->getName())
+            {
+                cout << "-----------Channel Found ! " << itChannel->getName() <<" Looking for the clients in the channel" << endl;
+                itClients = itChannel->getClients().begin();
+                cout << "-----------Clients counts are " << itChannel->getClients().size() << endl;
+                while (itClients != itChannel->getClients().end())
+                {
+                    cout <<"Found a client to send msg client is" <<"[" << itClients->getSockfd() << "]" << itClients->getNickname() << endl;
+                    sendMsg(itClients->getSockfd(), msg);
+                    itClients++;
+                }
+            }
+            itChannel++;
+        }
     }
 }
 
@@ -83,6 +118,9 @@ void IRC::CommandHandler(Client &client, string cmd)
             {
                 if (token == "PRIVMSG")
                 {
+                    string target;
+                    iss >> target;
+                    privmsg(target, iss.str());
                     break;
                 }
                 else if (token == "JOIN")
@@ -90,7 +128,7 @@ void IRC::CommandHandler(Client &client, string cmd)
                     string channel, pwd;
                     iss >> channel >> pwd;
                     if (channel[0] == '#')
-                        JoinChannel(client,channel, pwd);
+                        JoinChannel(client, channel, pwd);
                     else
                         sendMsg(client.getSockfd(), "Error: Channel name should be start with #");
                     break;
