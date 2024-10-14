@@ -24,7 +24,7 @@ public:
 
   string getIDENTITY()
   {
-	return (":" + this->nickname + "!" + this->username + "@" + "FSociety" + " ");
+	return (":" + this->nickname + "!" + this->username + "@" + this->hostInfo + " ");
   }
   // get-set
   void setUsername(string username) { this->username = username; }

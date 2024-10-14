@@ -32,7 +32,7 @@ public:
   void handleClient(int sockfd);
   void CommandHandler(Client &client, string cmd);
   void JoinChannel(Client &client, string channelName, string channelPwd);
-  void privmsg(string targetfd, string msg);
+  void privmsg(string targetfd, string msg, int sender);
   // constructors
   IRC(int port, string password);
   IRC(const IRC &irc);

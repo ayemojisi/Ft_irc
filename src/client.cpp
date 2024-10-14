@@ -12,15 +12,29 @@ Client::Client(int sockfd, sockaddr_in clientAddr) {
 }
 
 Client::Client(const Client &client) {
-  if (this != &client) {
-    this->sockfd = client.sockfd;
-    this->clientAddr = client.clientAddr;
+  if (this != &client)
+  {
+      this->sockfd = client.sockfd;
+      this->nickname = client.nickname;
+      this->username = client.username;
+      this->password = client.password;
+      this->isAuthed = client.isAuthed;
+      this->hostInfo = client.hostInfo;
+      this->realname = client.realname;
+      this->clientAddr = client.clientAddr;
   }
 }
 
 Client &Client::operator=(const Client &client) {
-  if (this != &client) {
+  if (this != &client)
+  {
     this->sockfd = client.sockfd;
+    this->nickname = client.nickname;
+    this->username = client.username;
+    this->password = client.password;
+    this->isAuthed = client.isAuthed;
+    this->hostInfo = client.hostInfo;
+    this->realname = client.realname;
     this->clientAddr = client.clientAddr;
   }
   return *this;

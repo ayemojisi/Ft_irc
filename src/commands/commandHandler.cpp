@@ -20,6 +20,7 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
         if (channel->getPass() == channelPwd)
         {
             channel->addClient(client);
+            sendMsg(client.getSockfd(), RPL_TOPIC(client.getNickname(), channelName, "42"));
             sendMsg(client.getSockfd(), client.getIDENTITY() + " JOIN " + channelName);
         }
         else
@@ -33,33 +34,29 @@ void IRC::JoinChannel(Client &client, string channelName, string channelPwd)
         create.setModfd(client.getSockfd());
         create.addClient(client);
         this->channels.push_back(create);
-        //sendMsg(client.getSockfd(), client.getNickname() + " " + channelName + " 331 : No topic is set");
+        sendMsg(client.getSockfd(), RPL_TOPIC(client.getNickname(), channelName, "42"));
         sendMsg(client.getSockfd(), client.getIDENTITY() + " JOIN " + channelName);
     }
 }
 
-void IRC::privmsg(string target, string _msg)
+void IRC::privmsg(string target, string _msg, int sender)
 {
     cout << "target = " << target << " _msg = " << _msg << endl;
     string msg = _msg.substr(1);
     if (target[0] == '#')
     {
-        cout << "-----------Detected it a channel !" << endl;
         string channelName = target;
         list<Channel>::iterator itChannel = this->channels.begin();
         list<Client>::iterator itClients;
         while (itChannel != this->channels.end())
         {
-            cout << "-----------Searching for channel, is it the channel ( " << channelName << " == "<< itChannel->getName() << " )" << endl;
             if (channelName == itChannel->getName())
             {
-                cout << "-----------Channel Found ! " << itChannel->getName() <<" Looking for the clients in the channel" << endl;
                 itClients = itChannel->getClients().begin();
-                cout << "-----------Clients counts are " << itChannel->getClients().size() << endl;
                 while (itClients != itChannel->getClients().end())
                 {
-                    cout <<"Found a client to send msg client is" <<"[" << itClients->getSockfd() << "]" << itClients->getNickname() << endl;
-                    sendMsg(itClients->getSockfd(), msg);
+                    if (itClients->getSockfd() != sender)
+                        sendMsg(itClients->getSockfd(), itClients->getIDENTITY() + "PRIVMSG" + " " + target + " :" + msg);
                     itClients++;
                 }
             }
@@ -120,7 +117,9 @@ void IRC::CommandHandler(Client &client, string cmd)
                 {
                     string target;
                     iss >> target;
-                    privmsg(target, iss.str());
+                    std::streampos pos = iss.tellg();
+                    std::string processed_part = iss.str().substr(pos);
+                    privmsg(target, processed_part, client.getSockfd());
                     break;
                 }
                 else if (token == "JOIN")
