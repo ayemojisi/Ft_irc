@@ -33,6 +33,7 @@ public:
   void CommandHandler(Client &client, string cmd);
   void JoinChannel(Client &client, string channelName, string channelPwd);
   void privmsg(string targetfd, string msg, int sender);
+  void KickUser(Client &client, const std::string &channelName, const std::string &targetUser);
   // constructors
   IRC(int port, string password);
   IRC(const IRC &irc);
